@@ -123,6 +123,6 @@ if __name__ == '__main__':
             plot_metrics(df, model_name=model_name, dataset_name=dataset, metric=metric, show = False)
             
             
-    # df = evalBioBertBasedModel("ncbi-disease")
-    # plot_metrics(df, model_name="Bio-bert-based", dataset_name="ncbi-disease", metric="accuracy")
-    # evalBioBertBasedModel("ontonote")
+    # dataset= "ncbi-disease"
+    # df = evalBioBertBasedModel(dataset)
+    # for metric in metricList: plot_metrics(df, model_name=model_name, dataset_name=dataset, metric=metric, show = False)

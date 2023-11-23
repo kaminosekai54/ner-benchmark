@@ -192,7 +192,7 @@ def plot_metrics(df, model_name, dataset_name, metric, show = True):
 
     # Plotting the bar chart with seaborn
     plt.figure(figsize=(10, 6))
-    ax = sns.barplot(x=metric_columns, y=df.iloc[0][metric_columns], palette=colors)
+    ax = sns.barplot(x=metric_columns, y=df.iloc[0][metric_columns], hue=metric_columns, palette=colors)
 
     # Customize plot appearance
     plt.title(f'{model_name} {metric} Comparison for {dataset_name}', fontsize=16)

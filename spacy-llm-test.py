@@ -5,7 +5,10 @@ import pandas as pd
 import json
 
 # set your open-AI api key as environmental variable :
-# os.environ["OPENAI_API_KEY"] = "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"
+openAiKey = ""
+with open("open-ai-api-key.txt", "r") as keyFile:
+    openAiKey = keyFile.readlines()[0].strip().replace("\n","")
+# os.environ["OPENAI_API_KEY"] = openAiKey 
 
 # load the model settings from the config file
 nlp = assemble("fewshot.cfg")

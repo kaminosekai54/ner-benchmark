@@ -1,0 +1,2 @@
+modelName,dataset,loss,accuracy_global,recall_global,f1_score_global,accuracy_O,recall_O,f1_score_O,accuracy_B-Disease,recall_B-Disease,f1_score_B-Disease,accuracy_I-Disease,recall_I-Disease,f1_score_I-Disease
+bert-based,ncbi-disease,0.14242,0.74,79.26,76.74,94.26,99.6,96.86,37.56,26.56,31.12,77.89,6.81,12.52

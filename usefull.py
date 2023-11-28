@@ -242,5 +242,3 @@ def correctLabels(datasetName, modelName):
     
     
     
-correctLabels("bc5cdr", "bio-bert-based")
-    

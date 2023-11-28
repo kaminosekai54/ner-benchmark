@@ -8,7 +8,8 @@ import numpy as np
 import chardet
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+import json
+from sklearn.metrics import classification_report, accuracy_score
 def download_file(url, output_file):
   Path(output_file).parent.mkdir(parents=True, exist_ok=True)
   urllib.request.urlretrieve (url, output_file)
@@ -171,3 +172,75 @@ def plot_metrics(df, model_name, dataset_name, metric, show = True):
     plt.tight_layout()
     if show == True : plt.show()
     plt.savefig(f'{figures_folder}{model_name}_{metric}_plot_for_{dataset_name}.png')
+
+def generateExempleFile(datasetName, fileType, nbExemplePerClass=2):
+    exemples = []
+    dfFull = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/{fileType}_assembled.tsv', sep="\t")
+    dfFull.labels = dfFull.labels.apply(lambda x : [str(word) for word in str(x).split()])
+    dfWords = readDatasetWithSentenceId(datasetName, type=fileType)
+    for label in dfWords.labels.unique():
+        subDf = dfFull[dfFull.labels.apply(lambda x: label in x)].sample(n=nbExemplePerClass)
+        for sentence in subDf.text.values.tolist():
+            exemples.append({"text":sentence})
+        
+    with open(f'datasets/{datasetName}/examples.json', "w") as exempleFile : json.dump(exemples, exempleFile, indent=4)
+    
+    
+        
+    # dfWords['words'] = dfWords['words'].apply(lambda word: ''.join(char for char in word if char not in string.punctuation))
+
+# Step 2: Identify unique labels
+    unique_labels = dfWords['labels'].unique()
+
+    # Step 3: Find rows where the same word has two different labels
+    result_rows = []
+
+    for label in unique_labels:
+        sub_df = dfWords[dfWords['labels'] == label]
+    
+        # Group by words to find pairs
+        word_groups = sub_df.groupby('words')['labels'].apply(set)
+    
+        for word, labels in word_groups.items():
+            if len(labels) >= 2:
+                result_rows.extend(sub_df[sub_df['words'] == word].itertuples(index=False))
+
+    # Convert the result to a new DataFrame
+    result_df = pd.DataFrame(result_rows)
+
+    # Display the result
+    # print(result_df)
+    
+# for datasetName in os.listdir("datasets/"):
+    # print(datasetName)
+    # generateExempleFile(datasetName, "train", nbExemplePerClass=1)
+
+def correctLabels(datasetName, modelName):
+    df1 = readDatasetWithSentenceId(datasetName, "test")
+    df2 = pd.read_csv(f'results/{datasetName}/{datasetName}_{modelName }_predictions.csv')
+    print(df1.labels.unique())
+    print(df2.labels.unique())
+    df1.labels= df1.labels.str.replace("I-", "").str.replace("B-", "")
+    df2.labels= df2.labels.str.replace("I-", "").str.replace("B-", "")
+    custom_labels = list(set(list(df1.labels.unique()) + list(df2.labels.unique())))
+    report = classification_report(df1.labels, df2.labels, labels=custom_labels, target_names=custom_labels, output_dict=True)
+    data = {
+        "modelName": [modelName ],
+        "datasetName": [datasetName],
+        "accuracy_global": [round(report['weighted avg']['precision']*100, 2)],
+        "recall_global": [round(report['weighted avg']['recall']*100, 2)],
+        "f1_score_global": [round(report['weighted avg']['f1-score'] *100, 2)]
+    }
+    for label in custom_labels:
+        data[f"accuracy_{label}"] = [round(report[label]['precision']*100, 2)]
+        data[f"recall_{label}"] = [round(report[label]['recall']*100, 2)]
+        data[f"f1_score_{label}"] = [round(report[label]['f1-score']*100, 2)]
+
+    df = pd.DataFrame(data)
+    df.to_csv(f'results/{datasetName}/{datasetName}_{modelName }_eval_corrected.csv', sep=",", index=False)
+    return df
+    
+    
+    
+correctLabels("bc5cdr", "bio-bert-based")
+    

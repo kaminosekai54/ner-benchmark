@@ -116,7 +116,7 @@ def assembleAllDataSet():
                     os.renames(subpath + file.replace (".tsv", "_assembled.tsv"), subpath + dataset+"_assembled/" + file.replace (".tsv", "_assembled.tsv"))
                 
 
-def plot_metrics(df, model_name, dataset_name, metric, show = True):
+def plot_metrics(df, model_name, dataset_name, metric, sufixe, show = True):
     results_folder = "results/"
     dataset_folder = f'{results_folder}{dataset_name}/'
     figures_folder = f'{dataset_folder}figures/'
@@ -137,7 +137,7 @@ def plot_metrics(df, model_name, dataset_name, metric, show = True):
     ax = sns.barplot(x=metric_columns, y=df.iloc[0][metric_columns], hue=metric_columns, palette=colors)
 
     # Customize plot appearance
-    plt.title(f'{model_name} {metric} Comparison for {dataset_name}', fontsize=16)
+    plt.title(f'{model_name} {sufixe} {metric} Comparison for {dataset_name}', fontsize=16)
     plt.xlabel('Entity type', fontsize=14)
     plt.ylabel(metric, fontsize=14)
     plt.ylim(0, 110)  # Set y-axis limit to percentages (0-100)
@@ -158,7 +158,7 @@ def plot_metrics(df, model_name, dataset_name, metric, show = True):
     # Save the plot with tight layout to prevent label overlaps
     plt.tight_layout()
     if show == True : plt.show()
-    plt.savefig(f'{figures_folder}{model_name}_{metric}_plot_for_{dataset_name}.png')
+    plt.savefig(f'{figures_folder}{model_name}_{sufixe}_{metric}_plot_for_{dataset_name}.png')
 
 def generateExempleFile(datasetName, fileType, nbExemplePerClass=2):
     exemples = []

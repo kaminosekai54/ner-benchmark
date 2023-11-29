@@ -1,0 +1,2 @@
+modelName,datasetName,accuracy_global,recall_global,f1_score_global,accuracy_I,recall_I,f1_score_I,accuracy_O,recall_O,f1_score_O,accuracy_B,recall_B,f1_score_B
+bert-based,species800,95.07,96.1,94.85,86.83,17.07,28.53,96.44,99.8,98.09,34.18,8.74,13.91

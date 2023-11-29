@@ -223,3 +223,22 @@ def correctLabels(datasetName, modelName):
 def getEncoding(filePath):
     with open(filePath, "rb") as file :
         return chardet.detect(file.read())['encoding']
+    
+def getGlobalModelResults(modelName):
+    dfList = []
+    for dataset in os.listdir("results/"):
+        #print(dataset)
+        for file in os.listdir(f'results/{dataset}/'):
+            if modelName in file and file.endswith("eval.csv"):
+                #print(file)
+                tmpDf = pd.read_csv(f'results/{dataset}/{file}')
+                tmpDf = tmpDf[["modelName", "dataset", "accuracy_global", "recall_global", "f1_score_global"]]
+                dfList.append(tmpDf)
+
+    finalDf = pd.concat(dfList, ignore_index=True)
+    #print(len(dfList))
+    #print(len(finalDf))
+    #print(finalDf)
+    return finalDf
+
+

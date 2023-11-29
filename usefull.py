@@ -2,14 +2,13 @@ import pandas as pd
 import os
 import urllib.request
 from pathlib import Path
-# from transformers import BertTokenizerFast
-# import torch
 import numpy as np
 import chardet
 import seaborn as sns
 import matplotlib.pyplot as plt
 import json
 from sklearn.metrics import classification_report, accuracy_score
+
 def download_file(url, output_file):
   Path(output_file).parent.mkdir(parents=True, exist_ok=True)
   urllib.request.urlretrieve (url, output_file)
@@ -26,7 +25,6 @@ def read_bc5CDR(filename):
                     quoting = 3, skip_blank_lines = False)
     df = df[~df['words'].astype(str).str.startswith('-DOCSTART- ')] # Remove the -DOCSTART- header
     df['sentence_id'] = (df.words == '').cumsum()
-    print(df[df.words != ''])
     return df[df.words != '']
 
 
@@ -79,13 +77,6 @@ def preprocessConll2003(datasetPath = "./datasets/conll2003/conll2003.csv"):
   # print(df_train, df_val, df_test )
   return df_train, df_val, df_test 
 
-
-
-
-  
-
-# preprocessConll2003()
-
 def reassembleDataset(datasetPath, sep = "\t"):
     result = ""
     with open(datasetPath, "rb") as file :
@@ -109,8 +100,6 @@ def reassembleDataset(datasetPath, sep = "\t"):
         if len(sentence) > 0 : newDataset[" ".join(sentence)] = " ".join(labels)
         df = pd.DataFrame.from_dict({"text": newDataset.keys(), "labels": newDataset.values()})
         df.to_csv(datasetPath[: datasetPath.rfind(".")] + "_assembled.tsv", sep=sep, index=False)
-            
-        
         
         
 def assembleAllDataSet():
@@ -125,8 +114,6 @@ def assembleAllDataSet():
                     print(file)
                     reassembleDataset(subpath + file)
                     os.renames(subpath + file.replace (".tsv", "_assembled.tsv"), subpath + dataset+"_assembled/" + file.replace (".tsv", "_assembled.tsv"))
-                
-                
                 
 
 def plot_metrics(df, model_name, dataset_name, metric, show = True):
@@ -184,11 +171,6 @@ def generateExempleFile(datasetName, fileType, nbExemplePerClass=2):
             exemples.append({"text":sentence})
         
     with open(f'datasets/{datasetName}/examples.json', "w") as exempleFile : json.dump(exemples, exempleFile, indent=4)
-    
-    
-        
-    # dfWords['words'] = dfWords['words'].apply(lambda word: ''.join(char for char in word if char not in string.punctuation))
-
 # Step 2: Identify unique labels
     unique_labels = dfWords['labels'].unique()
 
@@ -218,8 +200,6 @@ def generateExempleFile(datasetName, fileType, nbExemplePerClass=2):
 def correctLabels(datasetName, modelName):
     df1 = readDatasetWithSentenceId(datasetName, "test")
     df2 = pd.read_csv(f'results/{datasetName}/{datasetName}_{modelName }_predictions.csv')
-    print(df1.labels.unique())
-    print(df2.labels.unique())
     df1.labels= df1.labels.str.replace("I-", "").str.replace("B-", "")
     df2.labels= df2.labels.str.replace("I-", "").str.replace("B-", "")
     custom_labels = list(set(list(df1.labels.unique()) + list(df2.labels.unique())))
@@ -239,6 +219,7 @@ def correctLabels(datasetName, modelName):
     df = pd.DataFrame(data)
     df.to_csv(f'results/{datasetName}/{datasetName}_{modelName }_eval_corrected.csv', sep=",", index=False)
     return df
-    
-    
-    
+
+def getEncoding(filePath):
+    with open(filePath, "rb") as file :
+        return chardet.detect(file.read())['encoding']

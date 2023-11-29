@@ -1783,11 +1783,12 @@ discrete,['O'],O
 subnuclear,['O'],O
 foci,['O'],O
 termed,['O'],O
-"O
-BRCA1	O
-nuclear	O
-dots	O
-.","['O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O']",O
+"""",['O'],O
+BRCA1,['O'],O
+nuclear,['O'],O
+dots,['O'],O
+.,['O'],O
+"""",['O'],O
 BRCA1,['O'],O
 associates,['O'],O
 in,['O'],O
@@ -8014,7 +8015,7 @@ termination,['O'],O
 codons,['O'],O
 and,['O'],O
 C6,['O'],O
-nan,['O'],O
+null,['O'],O
 alleles,['O'],O
 .,['O'],O
 Allele,['B-PER'],B-PER
@@ -14832,8 +14833,9 @@ syndrome,['O'],O
 a,['O'],O
 case,['O'],O
 for,['O'],O
-"O
-lumping	O","['O', 'O', 'O']",O
+"""",['O'],O
+lumping,['O'],O
+"""",['O'],O
 .,['O'],O
 Recent,['O'],O
 studies,['O'],O
@@ -17001,8 +17003,9 @@ polyposis,['O'],O
 coli,['O'],O
 patients,['O'],O
 have,['O'],O
-"O
-multiple	O","['O', 'O', 'O']",O
+"""",['O'],O
+multiple,['O'],O
+"""",['O'],O
 colorectal,['O'],O
 adenomas,['O'],O
 (,['O'],O

@@ -1,0 +1,2 @@
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_O,recall_O,f1_score_O,accuracy_B-Disease,recall_B-Disease,f1_score_B-Disease,accuracy_I-Disease,recall_I-Disease,f1_score_I-Disease,accuracy_B-PER_new,recall_B-PER_new,f1_score_B-PER_new,accuracy_B-ORG_new,recall_B-ORG_new,f1_score_B-ORG_new,accuracy_B-LOC_new,recall_B-LOC_new,f1_score_B-LOC_new,accuracy_B-MISC_new,recall_B-MISC_new,f1_score_B-MISC_new
+spark-nlp,ncbi-disease,85.15,88.13,86.62,92.92,96.17,94.52,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0

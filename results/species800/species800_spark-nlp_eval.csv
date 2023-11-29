@@ -1,0 +1,2 @@
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_B,recall_B,f1_score_B,accuracy_I,recall_I,f1_score_I,accuracy_O,recall_O,f1_score_O,accuracy_B-ORG_new,recall_B-ORG_new,f1_score_B-ORG_new,accuracy_B-PER_new,recall_B-PER_new,f1_score_B-PER_new,accuracy_B-LOC_new,recall_B-LOC_new,f1_score_B-LOC_new,accuracy_B-MISC_new,recall_B-MISC_new,f1_score_B-MISC_new
+spark-nlp,species800,92.34,92.32,92.33,0.0,0.0,0.0,0.0,0.0,0.0,96.47,96.44,96.46,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0

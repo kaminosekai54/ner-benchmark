@@ -11,6 +11,7 @@ import time, os
 import sparknlp
 from usefull import readDatasetWithSentenceId
 from usefull import plot_metrics
+from usefull import getEncoding
 
 ################################################################################
 # functions
@@ -52,14 +53,15 @@ def evalSparkNLPModel(datasetName, modelName = "spark-nlp", startSpark=True, spa
     )
 
     # now importing the training and testing data
-    train_df= pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/train_assembled.tsv', sep="\t", dtype={"text":str, "labels":str})
+    train_df= pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/train_assembled.tsv', sep="\t", dtype={"text":str, "labels":str}, encoding=getEncoding(f'datasets/{datasetName}/{datasetName}_assembled/train_assembled.tsv'))
     train_df= train_df.assign(textList = train_df.text)
     train_df.textList  = train_df.textList .apply(lambda x : [str(x)])
     prediction_data = spark.createDataFrame(train_df.textList .values.tolist()).toDF("text")
     prediction_model = prediction_pipeline.fit(prediction_data)
     lp = LightPipeline(prediction_model)
-    test_df = pd.read_csv(f'datasets/{datasetName}/test.tsv', sep="\t", names=["text", "labels"], dtype={"text":str, "labels":str})
-    test_df.text = test_df.text.apply(lambda x : str(x)) 
+    # test_df = pd.read_csv(f'datasets/{datasetName}/test.tsv', sep="\t", names=["text", "labels"], dtype={"text":str, "labels":str}, encoding=getEncoding(f'datasets/{datasetName}/test.tsv'))
+    test_df = readDatasetWithSentenceId(datasetName, "test")
+    test_df["text"] = test_df.words.apply(lambda x : str(x)) 
     start_time = time.time()
     print("starting evaluation")
     result = lp.annotate(test_df.text.values.tolist())
@@ -116,6 +118,6 @@ if __name__ == '__main__':
             plot_metrics(df, model_name=model_name, dataset_name=dataset, metric=metric, show = False)
             
             
-    # dataset= "bc5cdr"
+    # dataset= "species800"
     # df = evalSparkNLPModel(dataset)
     # for metric in metricList: plot_metrics(df, model_name=model_name, dataset_name=dataset, metric=metric, show = False)

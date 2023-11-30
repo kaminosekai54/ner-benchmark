@@ -1,2 +1,2 @@
-modelName,datasetName,accuracy_global,recall_global,f1_score_global,accuracy_cell_type,recall_cell_type,f1_score_cell_type,accuracy_cell_line,recall_cell_line,f1_score_cell_line,accuracy_protein,recall_protein,f1_score_protein,accuracy_RNA,recall_RNA,f1_score_RNA,accuracy_O,recall_O,f1_score_O,accuracy_DNA,recall_DNA,f1_score_DNA
-Bio-bert-based,jnlpba,84.8,86.29,83.73,88.89,22.54,35.96,0.0,0.0,0.0,64.6,37.82,47.71,66.67,14.63,24.0,88.11,98.06,92.82,0.0,0.0,0.0
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_cell_type,recall_cell_type,f1_score_cell_type,accuracy_DNA,recall_DNA,f1_score_DNA,accuracy_O,recall_O,f1_score_O,accuracy_protein,recall_protein,f1_score_protein,accuracy_cell_line,recall_cell_line,f1_score_cell_line,accuracy_RNA,recall_RNA,f1_score_RNA
+Bio-bert-based,jnlpba,84.8,86.29,83.73,88.89,22.54,35.96,0.0,0.0,0.0,88.11,98.06,92.82,64.6,37.82,47.71,0.0,0.0,0.0,66.67,14.63,24.0

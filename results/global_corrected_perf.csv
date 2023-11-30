@@ -1,0 +1,16 @@
+modelName,dataset,accuracy_global,recall_global,f1_score_global
+bert-based,bc5cdr,91.41,89.28,90.0
+Bio-bert-based,bc5cdr,94.58,94.76,94.49
+bert-based,jnlpba,79.29,84.0,79.71
+Bio-bert-based,jnlpba,84.8,86.29,83.73
+bert-based,ncbi-disease,93.78,94.08,92.82
+Bio-bert-based,ncbi-disease,94.65,94.73,93.73
+bert-based,ontonote,85.17,88.35,83.46
+Bio-bert-based,ontonote,91.28,91.78,89.89
+bert-based,species800,95.07,96.1,94.85
+Bio-bert-based,species800,96.08,96.53,95.63
+spark-nlp,bc5cdr,75.95,85.03,80.23
+spark-nlp,jnlpba,71.07,80.79,75.62
+spark-nlp,ncbi-disease,85.16,88.14,86.62
+spark-nlp,ontonote,83.32,88.1,85.59
+spark-nlp,species800,92.34,92.32,92.33

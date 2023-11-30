@@ -1,2 +1,2 @@
-modelName,datasetName,accuracy_global,recall_global,f1_score_global,accuracy_Disease,recall_Disease,f1_score_Disease,accuracy_O,recall_O,f1_score_O
-Bio-bert-based,ncbi-disease,94.65,94.73,93.73,93.24,39.77,55.75,94.78,99.74,97.2
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_O,recall_O,f1_score_O,accuracy_Disease,recall_Disease,f1_score_Disease
+Bio-bert-based,ncbi-disease,94.65,94.73,93.73,94.78,99.74,97.2,93.24,39.77,55.75

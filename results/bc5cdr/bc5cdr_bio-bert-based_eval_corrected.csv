@@ -1,2 +1,2 @@
-modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_O,recall_O,f1_score_O,accuracy_Entity,recall_Entity,f1_score_Entity
-Bio-bert-based,bc5cdr,94.58,94.76,94.49,95.43,98.67,97.02,89.14,69.8,78.29
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_Entity,recall_Entity,f1_score_Entity,accuracy_O,recall_O,f1_score_O
+Bio-bert-based,bc5cdr,94.58,94.76,94.49,89.14,69.8,78.29,95.43,98.67,97.02

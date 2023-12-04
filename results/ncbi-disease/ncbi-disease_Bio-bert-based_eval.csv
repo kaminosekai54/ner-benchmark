@@ -1,2 +1,2 @@
-modelName,dataset,loss,accuracy_global,recall_global,f1_score_global,accuracy_O,recall_O,f1_score_O,accuracy_B-Disease,recall_B-Disease,f1_score_B-Disease,accuracy_I-Disease,recall_I-Disease,f1_score_I-Disease
-Bio-bert-based,ncbi-disease,0.09437,0.87,91.12,88.8,53.1,37.5,43.96,84.62,15.18,25.74,94.78,99.74,97.2
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_I-Disease,recall_I-Disease,f1_score_I-Disease,accuracy_O,recall_O,f1_score_O,accuracy_B-Disease,recall_B-Disease,f1_score_B-Disease
+Bio-bert-based,ncbi-disease,92.7,93.55,91.94,84.62,15.18,25.74,94.78,99.74,97.2,53.1,37.5,43.96

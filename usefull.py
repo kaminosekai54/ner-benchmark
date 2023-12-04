@@ -116,7 +116,7 @@ def assembleAllDataSet():
                     os.renames(subpath + file.replace (".tsv", "_assembled.tsv"), subpath + dataset+"_assembled/" + file.replace (".tsv", "_assembled.tsv"))
                 
 
-def plot_metrics(df, model_name, dataset_name, metric, sufixe, show = True):
+def plot_metrics(df, model_name, dataset_name, metric, sufixe, color, show = True):
     results_folder = "results/"
     dataset_folder = f'{results_folder}{dataset_name}/'
     figures_folder = f'{dataset_folder}figures/'
@@ -134,7 +134,10 @@ def plot_metrics(df, model_name, dataset_name, metric, sufixe, show = True):
 
     # Plotting the bar chart with seaborn
     plt.figure(figsize=(10, 6))
-    ax = sns.barplot(x=metric_columns, y=df.iloc[0][metric_columns], hue=metric_columns, palette=colors)
+    if color == None:
+        ax = sns.barplot(x=metric_columns, y=df.iloc[0][metric_columns], hue=metric_columns, palette=colors)
+    else:
+        ax = sns.barplot(x=metric_columns, y=df.iloc[0][metric_columns], color=color)
 
     # Customize plot appearance
     plt.title(f'{model_name} {sufixe} {metric} Comparison for {dataset_name}', fontsize=16)
@@ -220,6 +223,28 @@ def correctLabels(datasetName, modelName):
     df.to_csv(f'results/{datasetName}/{datasetName}_{modelName }_eval_corrected.csv', sep=",", index=False)
     return df
 
+def evalPerf(datasetName, modelName):
+    df1 = readDatasetWithSentenceId(datasetName, "test")
+    df2 = pd.read_csv(f'results/{datasetName}/{datasetName}_{modelName }_predictions.csv')
+    custom_labels = list(set(list(df1.labels.unique()) + list(df2.labels.unique())))
+    report = classification_report(df1.labels, df2.labels, labels=custom_labels, target_names=custom_labels, output_dict=True)
+    data = {
+        "modelName": [modelName ],
+        "dataset": [datasetName],
+        "accuracy_global": [round(report['weighted avg']['precision']*100, 2)],
+        "recall_global": [round(report['weighted avg']['recall']*100, 2)],
+        "f1_score_global": [round(report['weighted avg']['f1-score'] *100, 2)]
+    }
+    for label in custom_labels:
+        data[f"accuracy_{label}"] = [round(report[label]['precision']*100, 2)]
+        data[f"recall_{label}"] = [round(report[label]['recall']*100, 2)]
+        data[f"f1_score_{label}"] = [round(report[label]['f1-score']*100, 2)]
+
+    df = pd.DataFrame(data)
+    df.to_csv(f'results/{datasetName}/{datasetName}_{modelName}_eval.csv', sep=",", index=False)
+    return df
+
+
 def getEncoding(filePath):
     with open(filePath, "rb") as file :
         return chardet.detect(file.read())['encoding']
@@ -250,17 +275,8 @@ def getGlobalCorrectedModelResults(modelName):
     return finalDf
 
 
-import numpy as np
 
-def plotGlobalMetricsInOnePlot(df, modelList, metricList, suffixe ="", show=True):
-    # Set up an improved color mapping for each dataset
-    color_mapping = {
-        'bc5cdr': '#1f78b4',  # blue
-        'jnlpba': '#6a3d9a',  # purple
-        'ncbi-disease': '#ff7f00',  # orange
-        'ontonote': '#e31a1c',  # red
-        'species800': '#fdbf6f'  # yellow
-    }
+def plotGlobalMetricsInOnePlot(df, modelList, metricList, suffixe ="", show=True, color_mapping={'bc5cdr': '#1f78b4', 'jnlpba': '#6a3d9a', 'ncbi-disease': '#ff7f00', 'ontonote': '#e31a1c', 'species800': '#fdbf6f'}):
 
     # Set up figure and axis
     fig, ax = plt.subplots(nrows=len(modelList), ncols=len(metricList), figsize=(15, 10))

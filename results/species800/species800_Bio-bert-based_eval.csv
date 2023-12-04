@@ -1,2 +1,2 @@
-modelName,dataset,loss,accuracy_global,recall_global,f1_score_global,accuracy_B,recall_B,f1_score_B,accuracy_I,recall_I,f1_score_I,accuracy_O,recall_O,f1_score_O
-Bio-bert-based,species800,0.09259,0.7,77.66,73.79,68.51,27.51,39.26,89.23,22.24,35.61,96.78,99.75,98.24
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_B,recall_B,f1_score_B,accuracy_I,recall_I,f1_score_I,accuracy_O,recall_O,f1_score_O
+Bio-bert-based,species800,96.08,96.53,95.63,68.51,27.51,39.26,89.23,22.24,35.61,96.78,99.75,98.24

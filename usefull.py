@@ -315,6 +315,7 @@ def plotGlobalMetricsInOnePlot(df, modelList, metricList, suffixe ="", show=True
 
 def describeDataSet(datasetName):
     description = f'{str.upper(datasetName)} : \n'
+    
     trainDf = readDatasetWithSentenceId(datasetName, "train")
     devDf = rseadDatasetWithSentenceId(datasetName, "dev")
     testDf = readDatasetWithSentenceId(datasetName, "test")
@@ -350,3 +351,63 @@ def describeDataSet(datasetName):
 # df.to_csv(f'results/global_corrected_perf.csv', index=False)
 # Example usage:
 # plotGlobalMetricsInOnePlot(df, models_to_plot, metric_to_plot, suffixe="corrected", show=False)
+
+def getGlobalSample(datasetName, sampleSize=0.1, maxNbSample = 2000, minSamplePerLabel=100):
+    trainDf = readDatasetWithSentenceId(datasetName, "train")
+    devDf = readDatasetWithSentenceId(datasetName, "dev")
+    testDf = readDatasetWithSentenceId(datasetName, "test")
+    fullDf = pd.concat([trainDf, devDf, testDf], ignore_index=True)
+    fullDf.labels= fullDf.labels.str.replace("I-", "").str.replace("B-", "")
+    train_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/train_assembled.tsv', sep="\t")
+    dev_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/dev_assembled.tsv', sep="\t")
+    test_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/test_assembled.tsv', sep="\t")
+    full_assembled = pd.concat([train_assembled, dev_assembled, test_assembled], ignore_index=True)
+    full_assembled.labels= full_assembled.labels.str.replace("I-", "").str.replace("B-", "")
+    uniqueLabels = list(fullDf.labels.unique())
+    # print(uniqueLabels)
+    full_assembled["uniqueLabels"] = full_assembled.labels.apply(lambda x : list(set(str(x).split())))
+    rows =[]
+    sentences = []
+    nbSample = int(len(full_assembled) * sampleSize / (len(uniqueLabels)-1))
+    if len(full_assembled) * sampleSize > maxNbSample:
+        nbSample = int(maxNbSample / (len(uniqueLabels) -1))
+        assert(nbSample >= minSamplePerLabel)
+    for label in uniqueLabels:
+        minSample= nbSample
+        if label == "O" : continue
+        subDf = full_assembled[full_assembled.uniqueLabels.apply(lambda x : label in x) & full_assembled.text.apply(lambda x : x not in sentences)]
+        # print(subDf)
+        if len(subDf) < nbSample: 
+            minSample = len(subDf)
+            print(f"error for {datasetName} : not enough sample for the label {label} only {len(subDf)} available")
+        subDf = subDf.sample(n=minSample, random_state=12345)[["text", "labels"]]
+        rows.append(subDf)
+        sentences += subDf.text.values.tolist()
+        
+    sampledDf = pd.concat(rows, ignore_index=True).drop_duplicates()
+    
+    wordsData = []
+    for index, row in sampledDf.iterrows():
+        for (word, label) in zip(row.text.split(), row.labels.split()):
+            wordsData.append((word, label))
+            
+    wordDf = pd.DataFrame(wordsData, columns=["text", "labels"])
+    # print(wordDf.labels.unique())
+    sampledDf.to_csv(f"datasets/{datasetName}/{datasetName}_assembled/test_assembled_sample{int(sampleSize*100)}perc.csv", sep=",", index=False)
+    wordDf.to_csv(f"datasets/{datasetName}/test_sample{int(sampleSize*100)}perc.csv", sep=",", index=False)
+    return sampledDf, wordDf
+
+# for dataset in os.listdir("datasets/"):
+    # getGlobalSample(datasetName=dataset)
+    
+def getColorForDataset(datasetName):
+    color_mapping={
+        'bc5cdr': '#1f78b4', 
+        'jnlpba': '#6a3d9a', 
+        'ncbi-disease': '#ff7f00', 
+        'ontonote': '#e31a1c', 
+        'species800': '#fdbf6f'
+        }
+    if datasetName in color_mapping.keys() : return color_mapping[datasetName]
+    else: return "purple"
+    

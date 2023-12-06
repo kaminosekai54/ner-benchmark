@@ -402,7 +402,8 @@ def getGlobalSample(datasetName, sampleSize=0.1, maxNbSample = 2000, minSamplePe
     
 def getColorForDataset(datasetName):
     color_mapping={
-        'bc5cdr': '#1f78b4', 
+        'bc5cdr': '#1f78b4',
+        'bc5cdr-v2': '#8c6bb1', 
         'jnlpba': '#6a3d9a', 
         'ncbi-disease': '#ff7f00', 
         'ontonote': '#e31a1c', 
@@ -410,4 +411,4 @@ def getColorForDataset(datasetName):
         }
     if datasetName in color_mapping.keys() : return color_mapping[datasetName]
     else: return "purple"
-    
+generateExempleFile("bc5cdr-v2", "train")

@@ -1,0 +1,2 @@
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_Disease,recall_Disease,f1_score_Disease,accuracy_Chemical,recall_Chemical,f1_score_Chemical,accuracy_O,recall_O,f1_score_O
+Bio-bert-based,bc5cdr-v2,94.64,94.78,94.22,90.28,50.82,65.03,93.28,66.72,77.8,95.0,99.41,97.16

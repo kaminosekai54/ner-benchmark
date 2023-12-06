@@ -1,2 +1,2 @@
-modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_LOC,recall_LOC,f1_score_LOC,accuracy_I,recall_I,f1_score_I,accuracy_ORG,recall_ORG,f1_score_ORG,accuracy_B,recall_B,f1_score_B,accuracy_MISC,recall_MISC,f1_score_MISC,accuracy_O,recall_O,f1_score_O,accuracy_PER,recall_PER,f1_score_PER
-spark-nlp,species800,92.34,92.32,92.33,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,96.47,96.44,96.46,0.0,0.0,0.0
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_MISC,recall_MISC,f1_score_MISC,accuracy_LOC,recall_LOC,f1_score_LOC,accuracy_I,recall_I,f1_score_I,accuracy_PER,recall_PER,f1_score_PER,accuracy_B,recall_B,f1_score_B,accuracy_ORG,recall_ORG,f1_score_ORG,accuracy_O,recall_O,f1_score_O
+spark-nlp,species800,92.34,92.32,92.33,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,96.47,96.44,96.46

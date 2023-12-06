@@ -9,6 +9,28 @@ import matplotlib.pyplot as plt
 import json
 from sklearn.metrics import classification_report, accuracy_score
 
+
+################################################################################
+# global variable
+color_mapping={
+    'bc5cdr': '#1f78b4',
+    'bc5cdr-v2': '#8c6bb1', 
+    'jnlpba': '#6a3d9a', 
+    'ncbi-disease': '#ff7f00', 
+    'ontonote': '#e31a1c', 
+    'species800': '#fdbf6f'
+}
+
+#getters
+def getColorMap():
+    return color_mapping
+
+def getColorForDataset(datasetName):
+    if datasetName in color_mapping.keys() : return color_mapping[datasetName]
+    else: return "purple"
+
+################################################################################
+# function
 def download_file(url, output_file):
   Path(output_file).parent.mkdir(parents=True, exist_ok=True)
   urllib.request.urlretrieve (url, output_file)
@@ -258,7 +280,7 @@ def getGlobalModelResults(modelName):
                 tmpDf = tmpDf[["modelName", "dataset", "accuracy_global", "recall_global", "f1_score_global"]]
                 dfList.append(tmpDf)
 
-    finalDf = pd.concat(dfList, ignore_index=True)
+    finalDf = pd.concat(dfList, ignore_index=True).drop_duplicates()
     return finalDf
 
 
@@ -271,12 +293,12 @@ def getGlobalCorrectedModelResults(modelName):
                 tmpDf = tmpDf[["modelName", "dataset", "accuracy_global", "recall_global", "f1_score_global"]]
                 dfList.append(tmpDf)
 
-    finalDf = pd.concat(dfList, ignore_index=True)
+    finalDf = pd.concat(dfList, ignore_index=True).drop_duplicates()
     return finalDf
 
 
 
-def plotGlobalMetricsInOnePlot(df, modelList, metricList, suffixe ="", show=True, color_mapping={'bc5cdr': '#1f78b4', 'jnlpba': '#6a3d9a', 'ncbi-disease': '#ff7f00', 'ontonote': '#e31a1c', 'species800': '#fdbf6f'}):
+def plotGlobalMetricsInOnePlot(df, modelList, metricList, suffixe ="", show=True, color_mapping=getColorMap()):
 
     # Set up figure and axis
     fig, ax = plt.subplots(nrows=len(modelList), ncols=len(metricList), figsize=(15, 10))
@@ -335,34 +357,23 @@ def describeDataSet(datasetName):
     description += "the highest sota f1-score for this data set is at "
     return description
 
-# models_to_plot = ['bert-based', 'Bio-bert-based', 'spark-nlp']
-# metric_to_plot = ['f1_score_global', "recall_global", "accuracy_global"]
-# df1 = getGlobalModelResults("bert-based")
-# df2 = getGlobalModelResults("Bio-bert-based")
-# df3 = getGlobalModelResults("spark-nlp")
-# df = pd.concat([df1, df2, df3], ignore_index=True).drop_duplicates()
-# df.to_csv(f'results/global_perf.csv', index=False)
-# plotGlobalMetricsInOnePlot(df, models_to_plot, metric_to_plot, show=False)
+def generateGlobalMetricsPlot(modelList = ['bert-based', 'Bio-bert-based', 'spark-nlp'], metricList=['f1_score_global', "recall_global", "accuracy_global"]):
+    dfList=[]
+    correctedDfList=[]
+    for model in modelList:
+        dfList.append(getGlobalModelResults(model))
+        correctedDfList.append(getGlobalCorrectedModelResults(model))
+                      
+    globalDf = pd.concat(dfList, ignore_index=True).drop_duplicates()
+    globalDf.to_csv(f'results/global_perf.csv', index=False)
+    plotGlobalMetricsInOnePlot(globalDf, modelList , metricList, show=False)
 
-# df1 = getGlobalCorrectedModelResults("bert-based")
-# df2 = getGlobalCorrectedModelResults("Bio-bert-based")
-# df3 = getGlobalCorrectedModelResults("spark-nlp")
-# df = pd.concat([df1, df2, df3], ignore_index=True).drop_duplicates()
-# df.to_csv(f'results/global_corrected_perf.csv', index=False)
-# Example usage:
-# plotGlobalMetricsInOnePlot(df, models_to_plot, metric_to_plot, suffixe="corrected", show=False)
+    globalCorrectedDf = pd.concat(correctedDfList, ignore_index=True).drop_duplicates()
+    globalCorrectedDf.to_csv(f'results/global_corrected_perf.csv', index=False)
+    plotGlobalMetricsInOnePlot(globalCorrectedDf, modelList , metricList, suffixe="corrected", show=False)
 
 def getGlobalSample(datasetName, sampleSize=0.1, maxNbSample = 2000, minSamplePerLabel=100):
-    trainDf = readDatasetWithSentenceId(datasetName, "train")
-    devDf = readDatasetWithSentenceId(datasetName, "dev")
-    testDf = readDatasetWithSentenceId(datasetName, "test")
-    fullDf = pd.concat([trainDf, devDf, testDf], ignore_index=True)
-    fullDf.labels= fullDf.labels.str.replace("I-", "").str.replace("B-", "")
-    train_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/train_assembled.tsv', sep="\t")
-    dev_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/dev_assembled.tsv', sep="\t")
-    test_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/test_assembled.tsv', sep="\t")
-    full_assembled = pd.concat([train_assembled, dev_assembled, test_assembled], ignore_index=True)
-    full_assembled.labels= full_assembled.labels.str.replace("I-", "").str.replace("B-", "")
+    fullDf, full_assembled = getFullDataset(datasetName=datasetName, correctLabel=True)
     uniqueLabels = list(fullDf.labels.unique())
     # print(uniqueLabels)
     full_assembled["uniqueLabels"] = full_assembled.labels.apply(lambda x : list(set(str(x).split())))
@@ -399,16 +410,21 @@ def getGlobalSample(datasetName, sampleSize=0.1, maxNbSample = 2000, minSamplePe
 
 # for dataset in os.listdir("datasets/"):
     # getGlobalSample(datasetName=dataset)
+
+
     
-def getColorForDataset(datasetName):
-    color_mapping={
-        'bc5cdr': '#1f78b4',
-        'bc5cdr-v2': '#8c6bb1', 
-        'jnlpba': '#6a3d9a', 
-        'ncbi-disease': '#ff7f00', 
-        'ontonote': '#e31a1c', 
-        'species800': '#fdbf6f'
-        }
-    if datasetName in color_mapping.keys() : return color_mapping[datasetName]
-    else: return "purple"
-generateExempleFile("bc5cdr-v2", "train")
+    
+def getFullDataset(datasetName, correctLabel=False):
+    trainDf = readDatasetWithSentenceId(datasetName, "train")
+    devDf = readDatasetWithSentenceId(datasetName, "dev")
+    testDf = readDatasetWithSentenceId(datasetName, "test")
+    fullDf = pd.concat([trainDf, devDf, testDf], ignore_index=True)
+    train_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/train_assembled.tsv', sep="\t")
+    dev_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/dev_assembled.tsv', sep="\t")
+    test_assembled = pd.read_csv(f'datasets/{datasetName}/{datasetName}_assembled/test_assembled.tsv', sep="\t")
+    full_assembledDf = pd.concat([train_assembled, dev_assembled, test_assembled], ignore_index=True)
+    if correctLabel:
+        fullDf.labels= fullDf.labels.str.replace("I-", "").str.replace("B-", "")
+        full_assembledDf.labels= fullDf.labels.str.replace("I-", "").str.replace("B-", "")
+        
+    return fullDf, full_assembledDf

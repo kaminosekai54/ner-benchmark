@@ -1,2 +1,2 @@
-modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_o,recall_o,f1_score_o,accuracy_gene,recall_gene,f1_score_gene,accuracy_chemical,recall_chemical,f1_score_chemical,accuracy_disease,recall_disease,f1_score_disease
-azure,ncbi-disease,93.26,82.7,87.63,96.83,84.57,90.28,0.0,0.0,0.0,0.0,0.0,0.0,72.16,71.68,71.92
+modelName,dataset,accuracy_global,recall_global,f1_score_global,accuracy_o,recall_o,f1_score_o,accuracy_disease,recall_disease,f1_score_disease
+azure,ncbi-disease,92.96,92.51,92.69,96.59,94.65,95.61,70.24,79.07,74.4

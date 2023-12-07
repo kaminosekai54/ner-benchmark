@@ -427,4 +427,11 @@ def getFullDataset(datasetName, correctLabel=False):
         fullDf.labels= fullDf.labels.str.replace("I-", "").str.replace("B-", "")
         full_assembledDf.labels= fullDf.labels.str.replace("I-", "").str.replace("B-", "")
         
-    return fullDf, full_assembledDf
+    return fullDf, full_assembledDf 
+    
+# toPrint =[]
+# for dataset in os.listdir("datasets/"): 
+    # fullDf, full_assembledDf = getFullDataset(datasetName=dataset, correctLabel=True)
+    # toPrint += list(fullDf.labels.unique())
+    
+# for label in set(toPrint): print(f"{label} =")
